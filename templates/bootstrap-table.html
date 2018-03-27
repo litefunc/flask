@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Bootstrap Example</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--jquery-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+<!--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+<!--<script type="text/javascript" src="{{url_for('static', filename='jquery-3.1.1.min.js')}}"></script>-->
+<!--do not use jquery-3.1.1-->
+<script type="text/javascript" src="../static/jquery-3.1.1.min.js"></script>
+<!-- <script type="text/javascript" src="../static/jQuery-2.2.3/jquery-2.2.3.min.js"></script> -->
+<!-- <script type="text/javascript" src="../static/bower_components/jquery/dist/jquery.min.js"></script> -->
+
+<!--bootstrap-->
+<!--need jquery-->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <link rel="stylesheet" href="../static/bower_components/bootstrap/dist/css/bootstrap.min.css">
+<script type="text/javascript" src="../static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script> -->
+<!--bootstrap-table-->
+<link rel="stylesheet" href="../static/bower_components/bootstrap-table/dist/bootstrap-table.css">
+<script src="../static/bower_components/bootstrap-table/dist/bootstrap-table.js"></script>
+
+<!--bootstrap-table-fixed-columns--><!-- don't use bower version -->
+<link rel="stylesheet" href="../static/bootstrap-table-fixed-columns.css">
+<script type="text/javascript" src="../static/bootstrap-table-fixed-columns.js"></script>
+
+<script>
+$('#menu3').click(function(){
+  alert(1);
+});
+</script>
+
+</head>
+<body>
+
+  <div class="container">
+    <h2>Dynamic Tabs</h2>
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+      <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+      <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+      <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="home" class="tab-pane fade">
+        <h3>HOME</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      </div>
+      <div id="menu1" class="tab-pane fade">
+        <h3>Menu 1</h3>
+        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      </div>
+      <div id="menu2" class="tab-pane fade in active">
+        <table class="table table-sm" data-toggle="table" data-fixed-columns="true" data-height='600'>
+          <thead>
+              <tr>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                  <th>Extn.</th>
+                  <th>E-mail</th>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                  <th>Extn.</th>
+                  <th>E-mail</th>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                  <th>Extn.</th>
+                  <th>E-mail</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td nowrap="nowrap">System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+              </tr>
+              <tr>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td nowrap="nowrap">System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+              </tr>
+          </tbody>
+
+        </table>
+      </div>
+      <div id="menu3" class="tab-pane fade">
+        <table class="table table-sm" data-toggle="table" data-fixed-columns="true" data-height='600'>
+          <thead>
+              <tr>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                  <th>Extn.</th>
+                  <th>E-mail</th>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                  <th>Extn.</th>
+                  <th>E-mail</th>
+                  <th>First name</th>
+                  <th>Last name</th>
+                  <th>Position</th>
+                  <th>Office</th>
+                  <th>Age</th>
+                  <th>Start date</th>
+                  <th>Salary</th>
+                  <th>Extn.</th>
+                  <th>E-mail</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td nowrap="nowrap">System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+              </tr>
+              <tr>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td nowrap="nowrap">System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+                  <td>Tiger</td>
+                  <td>Nixon</td>
+                  <td>System Architect</td>
+                  <td>Edinburgh</td>
+                  <td>61</td>
+                  <td>2011/04/25</td>
+                  <td>$320,800</td>
+                  <td>5421</td>
+                  <td>t.nixon@datatables.net</td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

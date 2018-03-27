@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!--dygraphs-->
+<script type="text/javascript" src="../static/bower_components/dygraphs/dygraph-combined-dev.js"></script>
+<!--dygraphs synchronizer--><!--cannot put before dygraph-combined-dev.js-->
+<!--copy latest version from github-->
+<script type="text/javascript" src="../static/extras/synchronizer.js"></script>
+
+  <style>
+  #resizable { width: 150px; height: 150px; padding: 0.5em; }
+  #resizable h3 { text-align: center; margin: 0; }
+  </style>
+
+<!-- <script>
+  $(document).ready(function(){
+    $('#sy').click(function(){
+      alert(1);
+var sync = Dygraph.synchronize(gs,{range: false});
+      });
+      $('#dsy').click(function(){
+        alert(2);
+        sync.detach();
+
+        for (i = 0; i < 2; ++i) {
+  			gs[i].updateOptions({
+                  dateWindow: null,
+  			    valueRange: null
+  		    });
+          }
+
+
+  var sync = Dygraph.synchronize(gs,{selection: false, zoom:false});
+        });
+});
+
+</script> -->
+
+<script>
+var sync;
+var gs;
+
+window.update = function() {
+    var chk = document.getElementById('chk-sync').checked;
+
+    if(chk) {
+        sync = Dygraph.synchronize(gs,{range: false});
+    }
+    else {
+        sync.detach();
+	    for (i = 0; i < 2; ++i) {
+			gs[i].updateOptions({
+          dateWindow: null,
+			    valueRange: null
+		    });
+        }
+    }
+}
+</script>
+
+</head>
+
+<body>
+
+<input type="checkbox" id="chk-sync" onchange="update()"><label for="chk-sync">Sync</label>
+
+<div id="graphdiv" style="width:500px; height:400px;"></div>
+
+<div id="resizable" style="width:500px; height:400px;"></div>
+
+<script>
+gs = [];
+
+  gs.push(new Dygraph(document.getElementById("graphdiv"),
+                [
+                  [new Date("2009/07/12"),10,100,10],
+                  [new Date("2009/07/13"),20,'NaN',30],
+                  [new Date("2009/07/14"),'NaN',60,40],
+                  [new Date("2009/07/15"),70,80,20]
+                ],
+                {
+                  labels: [ "x", "A", "B", "C" ],
+                  //fractions: true,
+                  //errorBars: true,
+                  //showRangeSelector: true,
+                  valueRange: [0, 100],
+                  showRoller: true,
+                  connectSeparatedPoints:false
+                }));
+
+  gs.push(new Dygraph(document.getElementById("resizable"),
+                [
+                  [new Date("2009/07/12"),10,100,10],
+                  [new Date("2009/07/13"),20,'NaN',30],
+                  [new Date("2009/07/14"),'NaN',60,40],
+                  [new Date("2009/07/15"),70,80,20]
+                ],
+                {
+                  labels: [ "x", "A", "B", "C" ],
+                  //fractions: true,
+                  //errorBars: true,
+                  //showRangeSelector: true,
+                  valueRange: [0, 100],
+                  showRoller: true,
+                  connectSeparatedPoints:false
+                }));
+
+
+
+</script>
+
+<button id=sy>sy</button>
+<button id=dsy>dsy</button>
+</body>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>c3</title>
+
+	<!-- Load c3.css -->
+	<link href="{{url_for('static', filename='c3/c3-0.4.11/c3.css')}}" rel="stylesheet" type="text/css">
+
+	<!-- Load d3.js and c3.js -->
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="{{url_for('static', filename='c3/c3-0.4.11/c3.min.js')}}"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" href="/resources/demos/style.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <style>
+  #chart1 {height: 700px}
+  </style>
+
+  <script>
+  $( function() {
+    $( "#chart" ).resizable();
+  } );
+  </script>
+
+</head>
+<body>
+	<div id="chart">0</div>
+	<div id="chart1">1</div>
+	<div id="chart2">2</div>
+
+<script>
+var chart = c3.generate({
+    data: {
+        json: {
+            data1: [30, 20,'NaN', 40, 60, 50],
+            data2: [200, 130, 90,'NaN', 130, 220],
+            data3: [300, 200, 160, 400,'NaN', 250]
+        }
+    }
+});
+
+	</script>
+
+<script>
+var chart1 = c3.generate({
+    data: {
+    	x: '年月',
+		rows:
+            {{d.j|safe}}
+    },
+	subchart: {
+		show: true
+    },
+	size: {
+        height: 700
+    },
+	point: {
+        show: false
+    },
+	axis: {
+        x: {
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
+        }
+    }
+});
+</script>
+
+<script>
+var chart2 = c3.generate({
+    data: {
+    	x: '年月日',
+		rows:
+            {{d.q|safe}}
+    },
+	subchart: {
+		show: false
+    },
+	size: {
+				width:700,
+        height: 400
+    },
+	point: {
+        show: false
+    },
+	axis: {
+        x: {
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
+        }
+    }
+});
+</script>
+
+			{{d.data1}},
+			{{d.data2}}'<br>
+			{{d.j|safe}}
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello World</title>
+  <script src="https://unpkg.com/react@latest/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+
+<div id="root"></div>
+<div id="root1"></div>
+<div id="root2"></div>
+<!-- <script type="text/babel">
+
+function formatName(user) {
+  return user.firstName + ' ' + user.lastName;
+}
+
+const user = {
+  firstName: 'Harper',
+  lastName: 'Perez'
+};
+
+const element = (
+  <h1>
+    Hello, {formatName(user)}!
+  </h1>
+);
+
+
+
+ReactDOM.render(
+  element,
+  document.getElementById('root')
+);
+</script>
+<script type="text/babel">
+
+ReactDOM.render(
+   element,
+   document.getElementById('graphdiv')
+);
+
+</script> -->
+
+<script type="text/babel">
+
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    <li key={number.toString()}>
+      {number}
+    </li>
+  );
+  return (
+    <ul>{listItems}</ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+</script>
+<script type="text/babel">
+const element1 = (
+    <form action = "/listfield/" method = "POST">
+        <h4>mops</h4>
+        {% for item in d.mops %}
+        <input type="radio" name="dbtable" value="{{ item }}"/>{{ item }}<br/>
+        {% endfor %}
+        <h4>mysum</h4>
+        {% for item in d.mysum %}
+        <input type="radio" name="dbtable" value="{{ item }}"/>{{ item }}<br/>
+        {% endfor %}
+        <h4>summary</h4>
+        {% for item in d.summary %}
+        <input type="radio" name="dbtable" value="{{ item }}"/>{{ item }}<br/>
+        {% endfor %}
+        <h4>tse</h4>
+        {% for item in d.tse %}
+        <input type="radio" name="dbtable" value="{{ item }}"/>{{ item }}<br/>
+        {% endfor %}
+        <input type="submit" value="Show fields" className='btn btn-default'/>
+    </form>
+);
+
+ReactDOM.render(
+   element1,
+   document.getElementById('root1')
+);
+
+</script>
+
+<script type="text/babel">
+
+function InputList(props) {
+  const items = props.items;
+  const listItems = items.map((item) =>
+  <div><input key={item.toString()} value={ item } type="radio" name={props.name}/>{item}<br/></div>
+  );
+  return (
+    {listItems}
+  );
+}
+
+function NumberList(props) {
+  const items = {{d.tse|safe}};
+  return (
+  <form action = "/listfield/" method = "POST">
+    <InputList items={items} name="dbtable"/>
+    <input type="submit" value="Show fields" className='btn btn-default'/>
+  </form>
+  );
+}
+
+// const numbers = {{d.tse|safe}};
+ReactDOM.render(
+  // <NumberList numbers={numbers} name="dbtable"/>,
+  <NumberList/>,
+  document.getElementById('root2')
+);
+</script>
+
+</body>
+</html>

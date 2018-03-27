@@ -1,0 +1,79 @@
+<script>
+
+  $(document).ready(function(){
+    $('.remove').click(function(){
+      //$('[name='+$(this).val()+']').remove();
+      //$('#'+$(this).val()).remove();
+      $(this).parent().remove();
+      //$('#'+$(this).attr('name')).remove();
+      });
+});
+
+</script>
+<button id="sy">synchronize</button>
+<button id="dsy">dsynchronize</button>
+<div id="graphdiv">
+
+
+    {% for l in d.mll %}
+    <div id = "dy{{l[0]|safe}}" style="width:{{l[7]|safe}}px; height:{{l[8]|safe}}px;" className="few"></div>
+            <form action = "/scale/" method = "POST">
+                <input type="submit" name="dy{{l[0]|safe}}" value="raw"/>
+                <input type="submit" name="dy{{l[0]|safe}}" value="normalize"/>
+                <input type="submit" name="dy{{l[0]|safe}}" value="remove"/>
+            </form>
+    {% endfor %}
+</div>
+
+<script>
+gs = [];
+{% for l in d.mll %}
+    var g{{l[0]|safe}} = new Dygraph(document.getElementById('dy{{l[0]|safe}}'),
+          {{l[2]|safe}},
+          {
+            labels: {{l[3]|safe}},
+            axes: {
+                x: {
+                    valueFormatter: Dygraph.dateString_,
+                    axisLabelFormatter: Dygraph.dateAxisFormatter,
+                    ticker: Dygraph.dateTicker
+                }
+          },
+          highlightSeriesOpts: {
+          strokeWidth: 1,
+          strokeBorderWidth: 1,
+          highlightCircleSize: 5
+          },
+          showRangeSelector: {{l[9]|safe}},
+          legend: 'follow',
+          labelsSeparateLines:true,
+          connectSeparatedPoints:true
+          });
+gs.push(
+
+        g{{l[0]|safe}}
+
+        );
+{% endfor %}
+//var sync = Dygraph.synchronize(gs,{range: false});
+</script>
+
+<script>
+  $(document).ready(function(){
+    $('#sy').click(function(){
+      alert(1);
+var sync = Dygraph.synchronize(gs,{range: false});
+      });
+        $('#dsy').click(function(){
+      alert(0);
+var sync = Dygraph.synchronize(gs,{selection: false, zoom:false});
+      });
+});
+
+</script>
+
+<script>
+  $(function(){
+    $('#tabs a[href="{{d.tab|safe}}"]').click();
+  });
+</script>

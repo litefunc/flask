@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../static/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <script>
+
+    if (!String.prototype.format) {
+      String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+          return typeof args[number] != 'undefined'
+            ? args[number]
+            : match
+          ;
+        });
+      };
+    }
+
+    $(document).ready(function(){
+      var i=1;
+
+    $('#b').click(function(){
+      var d=`<div id = "dy{0}" style="width:{{l[7]|safe}}px; height:{{l[8]|safe}}px;" className="few"></div>
+                  <form>
+                      <input type="button" name="dy{0}" value="raw"/>
+                      <input type="button" name="dy{0}" value="normalize"/>
+                      <input type="button" name="dy{0}" value="remove"/></form>
+                  `.format(i)
+
+$('#tabs-13').append(d);
+$("#tabs-13").on('click', 'input', fa);
+var id="dy"+i;
+      $(function () {
+        Highcharts.chart(id, {
+          rangeSelector: {
+
+          },
+            chart: {
+                zoomType: 'x'
+            },
+            credits: false,
+            title: {
+                text: null
+
+            },
+            plotOptions: {
+                series: {
+                    connectNulls: true
+                }
+            },
+
+            data: {
+                columns: [
+                    ['time', 1, 2, 3, 4], // categories
+                    ['a', 1, 2, 3, 4], // first series
+                    ['b', 5,4 , 'null', 2] // second series
+                ]
+            }
+        });
+      });
+      i+=1;
+    });
+  })
+
+</script>
+<script>
+
+function fa(){
+
+  if ($(this).attr('value')=="remove"){
+    $(this).parent().remove();
+    $('#'+$(this).attr('name')).remove();
+  }
+}
+
+</script>
+
+</head>
+<body>
+  <button id="b">click</button>
+  <div id =tabs-13></div>
+
+</body>
+</html>

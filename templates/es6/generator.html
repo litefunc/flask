@@ -1,0 +1,19 @@
+<script>
+var con = function functionName(x) {
+  console.log(x)
+}
+
+var gen = function* () {
+  var f1 = yield 1;
+  var f2 = yield 2;
+  console.log('f1',f1);
+  console.log('f2',f2);
+};
+
+var g = gen();
+
+con(g.next(4))
+con(g.next(3))
+con(g.next(1))
+
+</script>

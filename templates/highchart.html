@@ -1,0 +1,123 @@
+
+<script type=text/javascript>
+if (!String.prototype.format) {
+    String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+        return typeof args[number] != 'undefined'
+          ? args[number]
+          : match
+        ;
+        });
+    };
+}
+var i=1;
+$(function() {
+    $('#mline').on('click', function() {
+
+        var d=`<div id = "dy{0}" className="few"></div>
+        <form>
+          <input type="button" name="dy{0}" value="raw"/>
+          <input type="button" name="dy{0}" value="normalize"/>
+          <input type="button" name="dy{0}" value="remove"/>
+        </form>`.format(i)      //use button instead of submit or the page will reload
+
+        $('#tabs-13').append(d);
+        $("#tabs-13 form").on('click', 'input', scalehighchart);
+        $('#tabs a[href="#tabs-13"]').click();
+        $.getJSON($SCRIPT_ROOT + '/mlinehighchart/', {
+        data: $("#mlineform").serialize(),
+        }, function(data) {
+            Highcharts.stockChart(data.j, {
+                credits: false,
+                            chart: {
+                zoomType: 'y'
+            },
+                rangeSelector: {
+                },
+            legend: {
+                enabled: true
+            },
+                title: {
+                    text: null
+                },
+                plotOptions: {
+                    series: {
+                        connectNulls: true
+                    }
+                },
+                data: {
+                  rows: data.data
+                }
+            });
+        });
+        i+=1;
+        return false;
+    });
+});
+</script>
+<script>
+
+function scalehighchart(){
+    if ($(this).attr('value')=="remove"){
+        $(this).parent().remove();
+        $('#'+$(this).attr('name')).remove();
+        $.getJSON($SCRIPT_ROOT + '/scalehighchart/', {
+        name: $(this).attr('name'),
+        value: $(this).attr('value')
+        }, function(data) {
+            Highcharts.stockChart(data.j, {
+                credits: false,
+                chart: {
+                    zoomType: 'y'
+                },
+                legend: {
+                    enabled: true
+                },
+                rangeSelector: {
+                },
+                title: {
+                    text: null
+                },
+                plotOptions: {
+                    series: {
+                        connectNulls: true
+                    }
+                },
+                data: {
+                  rows: data.data
+                }
+            });
+        });
+    }else{
+        $.getJSON($SCRIPT_ROOT + '/scalehighchart/', {
+        name: $(this).attr('name'),
+        value: $(this).attr('value')
+        }, function(data) {
+            Highcharts.stockChart(data.j, {
+                credits: false,
+                chart: {
+                    zoomType: 'y'
+                },
+                legend: {
+                    enabled: true
+                },
+                rangeSelector: {
+                },
+                title: {
+                    text: null
+                },
+                plotOptions: {
+                    series: {
+                        connectNulls: true
+                    }
+                },
+                data: {
+                  rows: data.data
+                }
+            });
+        });
+    }
+}
+
+</script>

@@ -1,0 +1,316 @@
+<link rel="stylesheet" type="text/css" href="../static/bower_components/datatables/media/css/dataTables.jqueryui.min.css">
+<script type="text/javascript" src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../static/bower_components/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
+<style>
+.hidden {
+    display: none;
+}
+.loading {
+    color: blue;
+}
+</style>
+<div id="tabs-report1" class="tab-pane">
+
+  <form id="rep1incform">
+      公司代號:<input type="text" name=companyId value=5522>
+      <input type="submit" value="query">
+      <span id=statementInc>ifrs前後-綜合損益表(季)-一般業</span>
+      <span id=companyIdInc class="loading"></span>
+      <span class="loading hidden">Loading ...</span>
+  </form>
+  <form id="rep1balform">
+      公司代號:<input type="text" name=companyId value=5522>
+      <input type="submit" value="query">
+      <span id=statementBal>ifrs前後-資產負債表-一般業</span>
+      <span id=companyIdBal class="loading"></span>
+      <span class="loading hidden">Loading ...</span>
+  </form>
+  <form id="rep1cashform">
+      公司代號:<input type="text" name=companyId value=5522>
+      <input type="submit" value="query">
+      <span id=statementCash>ifrs現金流量表</span>
+      <span id=companyIdCash class="loading"></span>
+      <span class="loading hidden">Loading ...</span>
+  </form>
+<span id="ajaxStart"></span>
+</div>
+
+<div id="tabs-income" class="tab-pane">
+    <div class="row" id="inc">
+    </div>
+</div>
+<div id="tabs-balance" class="tab-pane">
+    <div class="row" id=bal>
+    </div>
+</div>
+
+<div id="tabs-cashflow" class="tab-pane">
+  <div class="row" id="cash">
+  </div>
+</div>
+
+<script>
+function incStatement(data) {
+  var statementInc = document.getElementById("statementInc");
+  statementInc.innerHTML=`${data.tb1.inc}`;
+  var companyIdInc = document.getElementById("companyIdInc");
+  companyIdInc.innerHTML=`>>>${data.companyId}${data.companyName}`;
+  var innerThs = data.incStatement[0].slice(1,-1).map(x =>`
+    <th style='text-align: right;width: 100%;'>${x.value}</th>
+    <th style='text-align: right;font-size: 14px;'>%</th>`);
+  var thead = `
+    <thead>
+      <tr>
+        <th style='text-align: center'>${data.incStatement[0][0].value}</th>
+        ${innerThs.join('')}
+        <th>Sparklines</th>
+      </tr>
+    </thead>`;
+  var tbody = data.incStatement.slice(1).map(function(x){
+      var innerTds= x.slice(1, -1).map(x =>`
+        <td>
+          <div style="background-image: linear-gradient( to right, ${x.color} ${x.width}%, #FFF 0px);text-align: right;">${x.value}</div>
+        </td>
+        <td style="text-align: right;font-size: 12px;">${x.percent}</td>
+        `);
+      return `
+        <tr>
+          <td><div>${x[0].value}</div></td>
+          ${innerTds.join('')}
+          <td>${x.slice(-1)[0].value}</td>
+        </tr>`; //slice return an array, not a constant
+  });
+  var table = document.getElementById("inc");
+  table.innerHTML = `
+    <table id="report2" class="display compact nowrap">
+      ${thead}
+      <tbody>${tbody.join('')}</tbody>
+    </table>`;
+
+  $(function() {
+      for (var i = 0; i < data.sparkline.inc.slice(1).length; i++) {
+        // console.log(`sparklineinc:`, i, data.sparkline.inc.slice(1)[i].slice(1, -1));
+        $('.inc'+(i+1)).sparkline(data.sparkline.inc.slice(1)[i].slice(1, -1), {width:'100px',height:'25px', spotColor: undefined,
+        minSpotColor: '#00ff00',
+        maxSpotColor: '#ff0000'});
+      }
+  });
+
+    $('#report2').DataTable({
+      colReorder: true,
+      scrollY:        820,
+      scrollX:        true,
+      scrollCollapse: true,
+      paging:         false,
+      searching: false,
+      info:     false,
+      ordering: false,
+      fixedColumns:   true,
+      fixedHeader: true
+    });
+}
+function balSheet(data) {
+  var statementBal = document.getElementById("statementBal");
+  statementBal.innerHTML=`${data.tb1.bal}`;
+  var companyIdBal = document.getElementById("companyIdBal");
+  companyIdBal.innerHTML=`>>>${data.companyId}${data.companyName}`;
+  var innerThs = data.balSheet[0].slice(1,-1).map(x =>`
+    <th style='text-align: right;width: 100%;'>${x.value}</th>
+    <th style='text-align: right;font-size: 14px;'>%</th>
+    `);
+  var thead = `
+    <thead>
+      <tr>
+        <th style='text-align: center'>${data.balSheet[0][0].value}</th>
+        ${innerThs.join('')}
+        <th>Sparklines</th>
+      </tr>
+    </thead>`;
+  var tbody = data.balSheet.slice(1).map(function(x){
+      var innerTds= x.slice(1, -1).map(x =>`
+        <td>
+          <div style="background-image: linear-gradient( to right, ${x.color} ${x.width}%, #FFF 0px);text-align: right;">${x.value}</div>
+        </td>
+        <td style="text-align: right;font-size: 12px;">${x.percent}</td>
+        `);
+      return `
+      <tr>
+        <td><div>${x[0].value}</div></td>
+        ${innerTds.join('')}
+        <td>${x.slice(-1)[0].value}</td>
+      </tr>`; //slice return an array, not a constant
+  });
+  var table = document.getElementById("bal");
+  table.innerHTML = `
+    <table id="report3" class="display compact nowrap">
+      ${thead}
+      <tbody>${tbody.join('')}</tbody>
+    </table>`;
+
+  $(function() {
+      for (var i = 0; i < data.sparkline.bal.slice(1).length; i++) {
+        // console.log(`sparklinebal:`, i, data.sparkline.bal.slice(1)[i].slice(1, -1));
+        $('.bal'+(i+1)).sparkline(data.sparkline.bal.slice(1)[i].slice(1, -1), {width:'100px',height:'25px', spotColor: undefined,
+        minSpotColor: '#00ff00',
+        maxSpotColor: '#ff0000'});
+      }
+  });
+
+    $('#report3').DataTable({
+        colReorder: true,
+        scrollY:        820,
+        scrollX:        true,
+        // scrollCollapse: true,
+        paging:         false,
+        searching: false,
+        info:     false,
+        ordering: false,
+        fixedColumns:   true,
+        fixedHeader: true
+    });
+
+}
+function cashFlow(data) {
+  var statementCash = document.getElementById("statementCash");
+  statementCash.innerHTML=`${data.tb1.cash}`;
+  var companyIdCash = document.getElementById("companyIdCash");
+  companyIdCash.innerHTML=`>>>${data.companyId}${data.companyName}`;
+  var innerThs = data.cashFlow[0].slice(1,-1).map(x =>`
+    <th style='text-align: right;width: 100%;'>${x.value}</th>`);
+  var thead = `
+    <thead>
+      <tr>
+        <th style='text-align: center'>${data.cashFlow[0][0].value}</th>
+        ${innerThs.join('')}
+        <th>Sparklines</th>
+      </tr>
+    </thead>`;
+  var tbody = data.cashFlow.slice(1).map(function(x){
+      var innerTds= x.slice(1, -1).map(x =>`
+        <td>
+          <div style="background-image: linear-gradient( to right, ${x.color} ${x.width}%, #FFF 0px);text-align: right;">${x.value}</div>
+        </td>
+        `);
+      return `
+        <tr>
+          <td><div>${x[0].value}</div></td>
+          ${innerTds.join('')}
+          <td>${x.slice(-1)[0].value}</td>
+        </tr>`; //slice return an array, not a constant
+  });
+  var table = document.getElementById("cash");
+  table.innerHTML = `
+    <table id="cashFlowStatement" class="display compact nowrap">
+      ${thead}
+      <tbody>${tbody.join('')}</tbody>
+    </table>`;
+
+  $(function() {
+      for (var i = 0; i < data.sparkline.cash.slice(1).length; i++) {
+        // console.log(`sparklinecash:`, i, data.sparkline.cash.slice(1)[i].slice(1, -1));
+        $('.inc'+(i+1)).sparkline(data.sparkline.cash.slice(1)[i].slice(1, -1), {width:'100px',height:'25px', spotColor: undefined,
+        minSpotColor: '#00ff00',
+        maxSpotColor: '#ff0000'});
+      }
+  });
+
+    $('#cashFlowStatement').DataTable({
+      colReorder: true,
+      scrollY:        820,
+      scrollX:        true,
+      scrollCollapse: true,
+      paging:         false,
+      searching: false,
+      info:     false,
+      ordering: false,
+      fixedColumns:   true,
+      fixedHeader: true
+    });
+}
+</script>
+<script>
+$(document).ready(function(){
+  $(document).ajaxStart(function{
+    let div = document.getElementById("ajaxStart");
+    div.innerHTML=123;
+  })
+});
+</script>
+<script>
+$(function() {
+    $('#rep1incform input[type="submit"]').on('click', function() {
+        // $('#tabs a[href="#tabs-balance"]').click();
+        console.log(0);
+        $('.loading').toggleClass("hidden")
+        $.getJSON($SCRIPT_ROOT + '/rep1ajax/', {
+        data: $(this).parent().serialize()
+        }, function(data) {
+            console.log(1);
+            //bal
+            $('#tabs a[href="#tabs-balance"]').click();
+            balSheet(data)
+            //cash
+            $('#tabs a[href="#tabs-cashflow"]').click();
+            cashFlow(data)
+            // inc
+            $('#tabs a[href="#tabs-income"]').click();
+            incStatement(data)
+            $('.loading').toggleClass("hidden")
+        });
+    return false;
+    });
+});
+</script>
+<script>
+$(function() {
+    $('#rep1balform input[type="submit"]').on('click', function() {
+        console.log(0);
+        $('.loading').toggleClass("hidden")
+        // $('#tabs a[href="#tabs-income"]').click(); //need click before table draw so that fixedColumns can work
+        $.getJSON($SCRIPT_ROOT + '/rep1ajax/', {
+        data: $(this).parent().serialize()
+        }, function(data) {
+            console.log(1);
+            // inc
+            $('#tabs a[href="#tabs-income"]').click();
+            incStatement(data)
+            //cash
+            $('#tabs a[href="#tabs-cashflow"]').click();
+            cashFlow(data)
+            //bal
+            $('#tabs a[href="#tabs-balance"]').click();
+            balSheet(data)
+            $('.loading').toggleClass("hidden")
+        });
+    return false;
+    });
+});
+</script>
+<script>
+$(function() {
+    $('#rep1cashform input[type="submit"]').on('click', function() {
+        console.log(0);
+        $('.loading').toggleClass("hidden")
+        // $('#tabs a[href="#tabs-income"]').click(); //need click before table draw so that fixedColumns can work
+
+
+
+        $.getJSON($SCRIPT_ROOT + '/rep1ajax/', {
+        data: $(this).parent().serialize()
+        }, function(data) {
+            console.log(1);
+            //inc
+            $('#tabs a[href="#tabs-income"]').click();
+            incStatement(data)
+            //bal
+            $('#tabs a[href="#tabs-balance"]').click();
+            balSheet(data)
+            //cash
+            $('#tabs a[href="#tabs-cashflow"]').click();
+            cashFlow(data)
+            $('.loading').toggleClass("hidden")
+        });
+    return false;
+    });
+});
+</script>

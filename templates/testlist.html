@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>flask</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% include "import.html" %}
+  <script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  </script>
+
+  <!--myjsfile-->
+  <script>
+    $( function() {
+        // $( "#tabs" ).tabs(); //tabs() cannot be put at the end of this file
+        // for sparline to work in tabs
+        $( "#tabs").tabs({
+            activate: function( event, ui ) {
+                $.sparkline_display_visible();
+                }
+        });
+    } );
+  </script>
+  {% include "index.html" %}
+  <script>
+  //$( function() {
+  //    $('a[href={{d.tab|safe}}]').click();
+  //} );
+  </script>
+  <style>
+      li { list-style-type: none; margin: 0; padding: 0;}
+      #div4 li { display: inline;}
+      #div7 li { display: inline;}
+      #div11 li { display: inline;}
+      a {float: right; color: blue;}
+      .inline { float:left; }
+      /*#div13 { display: inline;}*/
+      /*#div12 input[type=checkbox] { display: none; }*/
+      .few .dygraph-legend > span.highlight { border: 1px solid grey; }
+      /*table { margin-left: 15px; }*/
+      #inc, #bal { margin-left: 15px; }
+  </style>
+</head>
+<body>
+<div id="tabs">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tabs-mline">Multiple lines</a></li>
+        <li><a data-toggle="tab" href="#tabs-mlineOut">1.</a></li>
+        <li><a data-toggle="tab" href="#tabs-plot1">Plot one</a></li>
+        <li><a data-toggle="tab" href="#tabs-plot1Out">2.</a></li>
+        <li><a data-toggle="tab" href="#tabs-split">Grid</a></li>
+        <li><a data-toggle="tab" href="#tabs-splitOut">3.</a></li>
+        <li><a data-toggle="tab" href="#tabs-ys">Year-season data</a></li>
+        <li><a data-toggle="tab" href="#tabs-ysOut">4.</a></li>
+        <li><a data-toggle="tab" href="#tabs-report">Report</a></li>
+        <li><a data-toggle="tab" href="#tabs-report1">Financial report</a></li>
+        <li><a data-toggle="tab" href="#tabs-income">Income statement</a></li>
+        <li><a data-toggle="tab" href="#tabs-balance">Balance sheet</a></li>
+        <li><a data-toggle="tab" href="#tabs-cashflow">Cash flow</a></li>
+        <!-- <li><a data-toggle="tab" href="#tabs-react">react</a></li>
+        <li><a data-toggle="tab" href="#tabs-table">table</a></li>
+        <li><a data-toggle="tab" href="#tabs-vue">vue</a></li> -->
+    </ul>
+  <!-- <div class="tab-content"> -->
+    <div id="tabs-mline" class="tab-pane active">
+        <div class="row" id="div3">
+            <div class="col-md-3 jumbotron">
+                <div id="mline-left-div1">
+                  <form id = "companyIdForm">
+                    <span>公司代號 companyID:<input type="text" name=companyId value=5522 style="width: 100px;">
+                    <input type="submit" value="Change db"></span>
+                  </form>
+                  <span id=mline-left-div1-span></span><br>
+                </div>
+                <div id="mline-left-div2">
+                  <h3>databases</h3>
+                  <form id = "listfieldform">
+                      <h4>mops</h4>
+                      <div v-for="item in mops">
+                          <input type="radio" name="dbtable" v-bind:value="item">${ item }
+                      </div>
+                      <h4>mysum</h4>
+                      <div v-for="item in mysum">
+                          <input type="radio" name="dbtable" v-bind:value="item">${ item }
+                      </div>
+                      <h4>summary</h4>
+                      <div v-for="item in summary">
+                          <input type="radio" name="dbtable" v-bind:value="item">${ item }
+                      </div>
+                      <h4>tse</h4>
+                      <div v-for="item in tse">
+                          <input type="radio" name="dbtable" v-bind:value="item">${ item }
+                      </div>
+                      <br><input type="submit" value="Show fields">
+                  </form>
+                </div>
+            </div>
+            <script>
+            new Vue({
+              el: '#listfieldform',
+              delimiters: ['${', '}'],
+              data: {
+                mops:{{d.mops|safe}},
+                mysum:{{d.mysum|safe}},
+                summary:{{d.summary|safe}},
+                tse:{{d.tse|safe}},
+              }
+            })
+            </script>
+            <div id="div4" class="col-md-6 jumbotron">
+              <script>
+              $(function() {
+                  $('#mline-left-div1 form input[type="submit"]').on('click', function() {
+                      $.getJSON($SCRIPT_ROOT + '/changeForwebCompany/', {
+                      data: $("#companyIdForm").serialize(),
+                      }, function(data) {
+                          let roots = data.companyId;
+                          document.getElementById("mline-left-div1-span").innerHTML = `${roots}`;
+                      });
+                  return false;
+                  });
+              });
+              </script>
+              <script>
+              $(function() {
+                  $('#mline-left-div2 form input[type="submit"]').on('click', function() {
+                      $.getJSON($SCRIPT_ROOT + '/listfieldajax/', {
+                      data: $("#listfieldform").serialize(),
+                      }, function(data) {
+                          let roots = data.fields.map(x =>`<li><button class='btn btn-primary'>${x}</button></li>`);
+                          document.getElementById("div4").innerHTML = `<ul>${roots.join('')}</ul>`;
+                      });
+                  return false;
+                  });
+              });
+              </script>
+            </div>
+            <form id="mlineform">
+            <!--<form action = "/mlinehighchart/" method = "POST">-->
+                <div id="div5" class="col-md-3 jumbotron">
+                    <ul></ul><br>
+                    Width :<input type="number" name= "width" value="1700" step=50 style="width: 80px;"/>px<br/>
+                    Height :<input type="number" name= "height" value="300" step=50 style="width: 80px;"/>px<br/>
+                    <input type="checkbox" name="rangeselector" value=true checked = true>Show range selector<br/>
+                    <input type="checkbox" name="title" value=true checked = true>Show title<br/>
+                    <input type="submit" value="Plot" id="mline"/>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div id="tabs-mlineOut" class="tab-pane">
+        {% include "mlineajax.html" %}
+    </div>
+    <div id="tabs-plot1" class="tab-pane">
+        <div class="row">
+            <div id=div6 class="col-md-3 jumbotron">
+              <form id = "listfield3form">
+                  <h4>mops</h4>
+                  <div v-for="item in mops">
+                      <input type="radio" name="dbtable3" v-bind:value="item">${ item }
+                  </div>
+                  <h4>mysum</h4>
+                  <div v-for="item in mysum">
+                      <input type="radio" name="dbtable3" v-bind:value="item">${ item }
+                  </div>
+                  <h4>summary</h4>
+                  <div v-for="item in summary">
+                      <input type="radio" name="dbtable3" v-bind:value="item">${ item }
+                  </div>
+                  <h4>tse</h4>
+                  <div v-for="item in tse">
+                      <input type="radio" name="dbtable3" v-bind:value="item">${ item }
+                  </div>
+                  <br><input type="submit" value="Show fields">
+              </form>
+            </div>
+            <script>
+              new Vue({
+                el: '#listfield3form',
+                delimiters: ['${', '}'],
+                data: {
+                  mops:{{d.mops|safe}},
+                  mysum:{{d.mysum|safe}},
+                  summary:{{d.summary|safe}},
+                  tse:{{d.tse|safe}},
+                }
+              })
+            </script>
+            <script>
+              $(function() {
+                  $('#div6 form input[type="submit"]').on('click', function() {
+                      $.getJSON($SCRIPT_ROOT + '/listfield3ajax/', {
+                      data: $("#listfield3form").serialize(),
+                      }, function(data) {
+                          var roots = data.fields3.map(x => `<li><button class='btn btn-info' name='plot1' value=${x}>${x}</button></li>`);
+                          var y = document.getElementById("div7");
+                          y.innerHTML = `<ul>${roots.join('')}</ul>`;
+                      });
+                  return false;
+                  });
+              });
+            </script>
+            <div id=div7 class="col-md-6 jumbotron">
+                <!--<form action = "/plot1/" method = "POST">-->
+                    <!--<ul>-->
+                        <!--{% for item in d.fields %}-->
+                        <!--<li><input class='btn btn-default' type = "submit" name="plot1" value="{{ item }}"/></li>-->
+                        <!--{% endfor %}-->
+                    <!--</ul>-->
+                <!--</form>-->
+            </div>
+            <div id=div8 class="col-md-3 jumbotron">
+                <ul></ul>
+            </div>
+        </div>
+
+    </div>
+    <div id="tabs-plot1Out" class="tab-pane">
+      <div id=div9>
+          {% include "plot1ajax.html" %}
+      </div>
+    </div>
+    <div id="tabs-split" class="tab-pane">
+        <div class="row">
+            <div id=div10 class="col-md-3 jumbotron">
+                <!--<form action = "/listfield1/" method = "POST">-->
+                <form id="listfield1form">
+                    <h4>mops</h4>
+                    <div v-for="item in mops1">
+                        <input type="radio" name="dbtable1" v-bind:value="item">${ item }
+                    </div>
+                    <h4>mysum</h4>
+                    <div v-for="item in mysum1">
+                        <input type="radio" name="dbtable1" v-bind:value="item">${ item }
+                    </div>
+                    <h4>summary</h4>
+                    <div v-for="item in summary1">
+                        <input type="radio" name="dbtable1" v-bind:value="item">${ item }
+                    </div>
+                    <h4>tse</h4>
+                    <div v-for="item in tse1">
+                        <input type="radio" name="dbtable1" v-bind:value="item">${ item }
+                    </div>
+                    <br><input type="submit" value="Show fields">
+                </form>
+
+            </div>
+            <div id=div11 class="col-md-6 jumbotron">
+            <script>
+              new Vue({
+                el: '#listfield1form',
+                delimiters: ['${', '}'],
+                data: {
+                  mops1:{{d.mops1|safe}},
+                  mysum1:{{d.mysum1|safe}},
+                  summary1:{{d.summary1|safe}},
+                  tse1:{{d.tse1|safe}},
+                }
+              })
+            </script>
+            <script>
+            $(function() {
+                $('#div10 form input[type="submit"]').on('click', function() {
+                    $.getJSON($SCRIPT_ROOT + '/listfield1ajax/', {
+                    data: $("#listfield1form").serialize(),
+                    }, function(data) {
+                        var roots = data.fields1.map(x => `<li><button class='btn btn-info'>${x}</button></li>`);
+                        var y = document.getElementById("div11");
+                        y.innerHTML = `<ul>${roots.join('')}</ul>`;
+                    });
+                return false;
+                });
+            });
+            </script>
+            </div>
+            <!-- <form action = "/mp/" method = "POST">    div should be inside form -->
+            <form id = "mpform">
+            <div id=div12 class="col-md-3 jumbotron">
+                <ul>
+                    {% for item in d.cols1 %}
+                    <li><button class='btn btn-default'>{{ item }}</button></li>
+                    {% endfor %}
+                    {% for item in d.cols3 %}
+                    <input type=checkbox name=cols1 class={{ item[1] }} value={{ item[0] }} checked = true/>
+                    {% endfor %}
+                </ul><br>
+                <input type="submit" value="Plot"/>
+            </div>
+            </form>
+        </div>
+
+    </div>
+    <div id="tabs-splitOut" class="tab-pane">
+      <div id=div13>
+      {% include "mpajax.html" %}
+      </div>
+    </div>
+
+    <div id="tabs-ys" class="tab-pane">
+
+        <div class="row">
+            <div id=div14 class="col-md-3 jumbotron">
+                <!--<form action = "/listfield2/" method = "POST">    should contain '/' in tail-->
+                <form id = "listfield2form">
+                    <h4>mops</h4>
+                    <div v-for="item in mops">
+                        <input type="radio" name="dbtable2" v-bind:value="item">${ item }
+                    </div>
+                    <h4>mysum</h4>
+                    <div v-for="item in mysum">
+                        <input type="radio" name="dbtable2" v-bind:value="item">${ item }
+                    </div>
+                    <h4>summary</h4>
+                    <div v-for="item in summary">
+                        <input type="radio" name="dbtable2" v-bind:value="item">${ item }
+                    </div>
+                    <h4>tse</h4>
+                    <div v-for="item in tse">
+                        <input type="radio" name="dbtable2" v-bind:value="item">${ item }
+                    </div>
+                    <br><input type="submit" value="Show fields">
+
+                </form>
+            </div>
+            <div id=div15 class="col-md-6 jumbotron">
+                <script>
+                  new Vue({
+                    el: '#listfield2form',
+                    delimiters: ['${', '}'],
+                    data: {
+                      mops:{{d.mops|safe}},
+                      mysum:{{d.mysum|safe}},
+                      summary:{{d.summary|safe}},
+                      tse:{{d.tse|safe}},
+                    }
+                  })
+                </script>
+                <script>
+                $(function() {
+                    $('#div14 form input[type="submit"]').on('click', function() {
+                        $.getJSON($SCRIPT_ROOT + '/listfield2ajax/', {
+                        data: $("#listfield2form").serialize(),
+                        }, function(data) {
+                            var roots = data.fields2.map(x => `<li><button class='btn btn-info'>${x}</button></li>`);
+                            var y = document.getElementById("div15");
+                            y.innerHTML = `<ul>${roots.join('')}</ul>`;
+                        });
+                    return false;
+                    });
+                });
+                </script>
+            </div>
+
+            <!--<form action = "/ys/" method = "POST">-->
+            <!--div should be inside form-->
+            <form id = "ysform">
+                <div id=div16 class="col-md-3 jumbotron">
+                    <ul></ul><br>
+                </div>
+                {% if d.mllys is defined %}
+                    {% if d.mllys !=[] %}
+                    公司代號:<input type="text" name=compid value="{{d.mllys[-1][2]|safe}}"/>
+                    {% else %}
+                    公司代號:<input type="text" name=compid value="5522"/>
+                    {% endif %}
+                {% else %}
+                    公司代號:<input type="text" name=compid value="5522"/>
+                {% endif %}
+                <input type="submit" value="Plot"/>
+            </form>
+            <!--<form action = "/changeall/" method = "POST">-->
+            <form id = "changeallform">
+                公司代號:<input type="text" name='compid1'/>
+                <input type="submit" value="Change all"/>
+            </form>
+            {% include "changeallajax.html" %}
+        </div>
+
+    </div>
+    <div id="tabs-ysOut" class="tab-pane">
+        <div id="div17" class="row">
+
+        </div>
+        {% include "ysajax.html" %} <!--don't put this in div-->
+    </div>
+    <div id="tabs-report" class="tab-pane">
+        {% include "reportajax.html" %}
+    </div>
+
+    {% include "tableajax1.html" %}
+
+
+  </div>
+
+{% include "bottom.html" %}
+</body>
+</html>

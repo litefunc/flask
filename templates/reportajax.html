@@ -1,0 +1,72 @@
+        <form id = "repform">
+            公司代號:<input type="text" name=compid_report value="5522"/>
+            <input type="submit" value="query"/>
+        </form>
+
+        <h3 id=income></h3>
+        <a href=#balence style="display: inline;float: right;color:blue;">To balence sheet</a>
+
+        <table id="report" class="table table-striped table-condensed table-sm table-hover display">
+
+        </table>
+        <h3 id=balence></h3>
+        <a href=#income style="display: inline;float: right;color:blue;">To income statement</a>
+
+        <table id="report1" class="table table-striped table-condensed table-sm table-hover display">
+
+        </table>
+
+        <script>
+        $(function() {
+            $('#repform input[type="submit"]').on('click', function() {
+                console.log(0);
+                $.getJSON($SCRIPT_ROOT + '/repajax/', {
+                data: $(this).parent().serialize()
+                }, function(data) {
+                    console.log(1);
+                    // console.log(`{0}>>>{1}{2}`.format(data.tb[0],data.compid_report,data.compname));
+                    document.getElementById("income").innerHTML=`{0}>>>{1}{2}`.format(data.tb[0],data.compid_report,data.compname);
+                    document.getElementById("balence").innerHTML=`{0}>>>{1}{2}`.format(data.tb[1],data.compid_report,data.compname);
+
+                    var ths= data.report[0][0].map(function(i){
+                      return `<th>`+i[0]+`</th>`;
+                    });
+                    var thead=`<thead><tr>`+ths.join('')+`</tr></thead >`;
+                    // console.log('thead:',thead);
+                    var trs= data.report[0].slice(1).map(function(i){
+                      var tds= i.map(function(j){
+                        return `<td nowrap><div style="width:{0}%;background-color:{1};">{2}</div></td>`.format(j[1],j[2],j[0]);
+                      });
+                      return `<tr>`+tds.join('')+`</tr>`;
+                    });
+
+                    var tbody=`<tbody>`+trs.join('')+`</tbody>`;
+                    // console.log('tbody:',tbody);
+                    // var table=`<table id='report' class='table table-striped table-condensed table-sm table-hover display'>`+thead+tbody+`</table>`;
+                    document.getElementById("report").innerHTML=thead+tbody;
+
+                    var ths= data.report[1][0].map(function(i){
+                      return `<th>`+i[0]+`</th>`;
+                    });
+                    var thead=`<thead><tr>`+ths.join('')+`</tr></thead >`;
+
+                    var trs= data.report[1].slice(1).map(function(i){
+                      var tds= i.map(function(j){
+                        return `<td nowrap><div style="width:{0}%;background-color:{1};">{2}</div></td>`.format(j[1],j[2],j[0]);
+                      });
+                      return `<tr>`+tds.join('')+`</tr>`;
+                    });
+
+                    var tbody=`<tbody>`+trs.join('')+`</tbody>`;
+
+                    document.getElementById("report1").innerHTML=thead+tbody;
+
+                    // var table1=`<table id='report1' class='table table-striped table-condensed table-sm table-hover display'>`+thead+tbody+`</table>`;
+                    // var report = document.getElementById("tabs-8");
+                    // report.innerHTML=table+table1;
+
+                });
+            return false;
+            });
+        });
+        </script>

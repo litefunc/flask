@@ -1,0 +1,114 @@
+<!-- <script type=text/javascript>
+  $(function() {
+    $('a#calculate').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/ajax/', {
+        aa: $('input[name="a"]').val(),
+        bb: $('input[name="b"]').val()
+      }, function(data) {
+        $("#result").text(data.result1*data.result2);
+      });
+      return false;
+    });
+  });
+</script>
+<p><input type=text size=5 name=a> +
+   <input type=text size=5 name=b> =
+   <span id=result>?</span>
+<p><a href=# id=calculate>calculate server side</a> -->
+
+<!--<script type=text/javascript>-->
+<!--if (!String.prototype.format) {-->
+    <!--String.prototype.format = function() {-->
+        <!--var args = arguments;-->
+        <!--return this.replace(/{(\d+)}/g, function(match, number) {-->
+        <!--return typeof args[number] != 'undefined'-->
+          <!--? args[number]-->
+          <!--: match-->
+        <!--;-->
+        <!--});-->
+    <!--};-->
+<!--}-->
+<!--var i=1;-->
+<!--$(function() {-->
+<!--$('#b1').bind('click', function() {-->
+    <!--var d=`<div id = "dy{0}" className="few">{0}</div>-->
+      <!--<form action = "/scale1/" method = "POST">-->
+          <!--<input type="submit" name="dy{0}" value="raw"/>-->
+          <!--<input type="submit" name="dy{0}" value="normalize"/>-->
+          <!--<input type="submit" name="dy{0}" value="remove"/>-->
+      <!--</form>`.format(i)-->
+  <!--$('#tabs-13').append(d);-->
+
+  <!--$.getJSON($SCRIPT_ROOT + '/ajax1/', {-->
+    <!--aa: $('#formajax').serialize()-->
+  <!--}, function(data) {-->
+    <!--$("#result1").text(data.result1);-->
+  <!--});-->
+  <!--i+=1;-->
+  <!--return false;-->
+<!--});-->
+<!--});-->
+<!--</script>-->
+
+<!-- <form id="formajax">
+<input type=checkbox name="c1" value="x"> +
+   <input type=checkbox name="c1" value="y"> =
+   <button id=b1>answer</button>
+</form>
+    <div id="result1">??</div> -->
+
+<!--<script>-->
+<!--var sync;-->
+<!--var gs;-->
+
+<!--window.update = function() {-->
+    <!--var chk = document.getElementById('chk-sync').checked;-->
+
+    <!--if(chk) {-->
+        <!--sync = Dygraph.synchronize(gs,{range: false});-->
+    <!--}-->
+    <!--else {-->
+        <!--sync.detach();-->
+	    <!--for (i = 0; i < 2; ++i) {-->
+			<!--gs[i].updateOptions({-->
+          <!--dateWindow: null,-->
+			    <!--valueRange: null-->
+		    <!--});-->
+        <!--}-->
+    <!--}-->
+<!--}-->
+<!--</script>-->
+
+
+<!-- <button id="b">click</button>
+<button id="dyb">dygraphsajax</button>
+<div id="dygraphsajax"></div> -->
+<!--<input type="checkbox" id="chk-sync" onchange="update()"><label for="chk-sync">Sync</label>-->
+<!--<script type=text/javascript>-->
+<!--gs = [];-->
+<!--var w=0;-->
+  <!--$(function() {-->
+    <!--$('#dyb').bind('click', function() {-->
+        <!--var d=`<div id = "dygraphsajax{0}" className="few"></div>`.format(w)-->
+        <!--var id ='dygraphsajax'+w-->
+        <!--$('#tabs-1').append(d);-->
+      <!--$.getJSON($SCRIPT_ROOT + '/dygraphsajax/', {-->
+        <!--aa: 0,-->
+        <!--bb: 1-->
+      <!--}, function(data) {-->
+          <!--gs.push(new Dygraph(document.getElementById(id),-->
+                <!--[-->
+                  <!--[1,10,100,10],-->
+                  <!--[2,20,'NaN',30],-->
+                  <!--[3,'NaN',60,40],-->
+                  <!--[4,70,80,20]-->
+                <!--],-->
+                <!--{-->
+                  <!--labels: [ "x", "A", "B", "C" ]-->
+                <!--}));-->
+      <!--});-->
+      <!--w+=1-->
+      <!--return false;-->
+    <!--});-->
+  <!--});-->
+<!--</script>-->

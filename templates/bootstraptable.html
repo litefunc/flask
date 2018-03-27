@@ -1,0 +1,204 @@
+
+<!--bootstrap-table-->
+<link rel="stylesheet" href="../static/bower_components/bootstrap-table/dist/bootstrap-table.css">
+<script src="../static/bower_components/bootstrap-table/dist/bootstrap-table.js"></script>
+
+<!--bootstrap-table-fixed-columns--><!-- don't use bower version -->
+<link rel="stylesheet" href="../static/bootstrap-table-fixed-columns.css">
+<script type="text/javascript" src="../static/bootstrap-table-fixed-columns.js"></script>
+
+    <div id="tabs-9" class="tab-pane in active">
+
+        <form id="rep1incform">
+            公司代號:<input type="text" name=compid_report1 value=5522>
+            <input type="submit" value="query" id=sel>
+
+            <span id=income1></span>
+            <span><a href=#balence1>To balence sheet</a></span>
+
+        </form>
+        <span><button id=enable>fix column</button></span>
+        <div class="row" id="inc">
+        <!-- {% if d.report1 is defined %} -->
+            <!-- <table id="report2" class="display compact nowrap">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">{{d.report1[0][0][0][0]|safe}}</th>
+                        {% for i in d.report1[0][0][1:-1] %}
+                        <th style="text-align: right;width: 100%;">{{i[0]|safe}}</th><th style="text-align: right;font-size: 14px;">%</th>
+                        {% endfor %}
+                        <th>Sparklines</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in d.report1[0][1:] %}
+                    <tr>
+                        <td><div>{{item[0][0]|safe}}</div></td>
+                        {% for i in item[1:-1] %}
+                        <td><div style="background-image: linear-gradient( to right, {{i[2]|safe}} {{i[1]|safe}}%,  #FFF 0px);text-align: right;">{{i[0]|safe}}</div></td><td style="text-align: right;font-size: 12px;">{{i[3]|safe}}</td>
+                        {% endfor %}
+                        <td>{{item[-1][0]|safe}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table> -->
+      <!-- {% endif %} -->
+        </div>
+
+
+    {% if d.lspan is defined %}
+    {% for item in d.lspan[1:] %}
+    <script type="text/javascript">
+    $(function() {
+
+        /* Sparklines can also take their values from the first argument
+        passed to the sparkline() function */
+        // var myvalues = [10,8,5,null,4,4,1];
+        $('.inc{{loop.index}}').sparkline({{item[1:-1]|safe}}, {width:'100px',height:'25px',    spotColor: undefined,
+    minSpotColor: '#00ff00',
+    maxSpotColor: '#ff0000'});
+
+    });
+    </script>
+    {% endfor %}
+
+    {% endif %}
+
+    </div>
+
+    <div id="tabs-10" class="tab-pane in active">
+        <form id="rep1balform">
+            公司代號:<input type="text" name=compid_report1 value=5522>
+            <input type="submit" value="query">
+
+            <span id=balence1></span>
+            <span><a href=#income1>To income statement</a></span>
+
+        </form>
+
+        <span><button id=enable1>fix column</button></span>
+        <div class="row" id=bal>
+          {% if d.report1 is defined %}
+            <!-- <table id="report3" class="display compact nowrap">
+
+                <thead>
+                    <tr>
+                        <th style="text-align: center">{{d.report1[1][0][0][0]|safe}}</th>
+                        {% for i in d.report1[1][0][1:-1] %}
+                        <th style="text-align: right;width: 100%;">{{i[0]|safe}}</th><th style="text-align: right;font-size: 14px;">%</th>
+                        {% endfor %}
+                        <th>Sparklines</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in d.report1[1][1:] %}
+                    <tr>
+                        <td><div>{{item[0][0]|safe}}</div></td>
+                        {% for i in item[1:-1] %}
+                        <td><div style="background-image: linear-gradient( to right, {{i[2]|safe}} {{i[1]|safe}}%,  #FFF 0px);text-align: right;">{{i[0]|safe}}</div></td><td style="text-align: right;font-size: 12px;">{{i[3]|safe}}</td>
+                        {% endfor %}
+                        <td>{{item[-1][0]|safe}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table> -->
+          {% endif %}
+        </div>
+
+
+      {% if d.lspan1 is defined %}
+      {% for item in d.lspan1[1:] %}
+      <script type="text/javascript">
+      $(function() {
+
+          /* Sparklines can also take their values from the first argument
+          passed to the sparkline() function */
+          // var myvalues = [10,8,5,null,4,4,1];
+          $('.bal{{loop.index}}').sparkline({{item[1:-1]|safe}}, {width:'100px',height:'25px',    spotColor: undefined,
+    minSpotColor: '#00ff00',
+    maxSpotColor: '#ff0000'});
+
+      });
+      </script>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    <script>
+    $(function() {
+        $('#rep1incform input[type="submit"], #rep1balform input[type="submit"]').on('click', function() {
+            console.log(0);
+            $.getJSON($SCRIPT_ROOT + '/rep1ajax/', {
+            data: $(this).parent().serialize()
+            }, function(data) {
+                console.log(1);
+                // inc
+                var span = document.getElementById("income1");
+                span.innerHTML=`{0}>>>{1}{2}`.format(data.tb1[0], data.compid_report1, data.compname1);
+
+                // var span = `<span id=income1>{0}>>>{1}{2}</span>
+                //             <span><a href=#balence1>To income statement</a></span>`.format(data.tb1[0], data.compid_report1, data.compname1);
+                // $('#rep1incform').append(span);
+                // console.log(`#rep1incform:`, $('#rep1incform').html());
+                var roots = data.report1[0][0].slice(1,-1).map(function(x){
+                    return "<th style='text-align: right;width: 100%;'>"+x[0]+"</th><th style='text-align: right;font-size: 14px;'>%</th>";
+                });
+                var thead = `<thead><tr><th style='text-align: center'>{0}</th>`.format(data.report1[0][0][0][0])+roots.join('')+`<th>Sparklines</th></tr></thead>`;
+                // console.log(`thead:`,thead);
+                var tbody = data.report1[0].slice(1).map(function(x){
+                    var td= x.slice(1, -1).map(function(x){
+                        return `<td><div style="background-image: linear-gradient( to right, {0} {1}%,  #FFF 0px);text-align: right;">{2}</div></td><td style="text-align: right;font-size: 12px;">{3}</td>`.format(x[2], x[1], x[0], x[3]);
+                    });
+                    return `<tr><td><div>{0}</div></td>`.format(x[0][0]) + td.join('') + `<td>{0}</td></tr>`.format(x.slice(-1)[0][0]); //slice return an array, not a constant
+                });
+                // console.log(`tbody[0]:`,tbody[0]);
+                var table = document.getElementById("inc");
+                // console.log(`#inc parent:`,$('#inc').parent().html());
+                // console.log(`table.innerHTML:`, `<table id="report2" class="display compact nowrap">`+thead + tbody.join('')+`</table>`);
+                table.innerHTML = `<table id="report2" class="table table-sm" data-toggle="table" data-fixed-columns="true" data-height='600'>`+thead +`<tbody>`+ tbody.join('')+`</tbody></table>`;
+                // console.log(`#inc:`, $('#inc').html());
+                //bal
+                var span = document.getElementById("balence1");
+                span.innerHTML=`{0}>>>{1}{2}`.format(data.tb1[1], data.compid_report1, data.compname1);
+                // var span = `<span id=balence1>{0}>>>{1}{2}</span>
+                //             <span><a href=#income1>To income statement</a></span>`.format(data.tb1[1], data.compid_report1, data.compname1);
+                // $('#rep1balform').append(span);
+                // console.log(`#rep1balform:`, $('#rep1balform').html());
+                var roots = data.report1[1][0].slice(1,-1).map(function(x){
+                    return "<th style='text-align: right;width: 100%;'>"+x[0]+"</th><th style='text-align: right;font-size: 14px;'>%</th>";
+                });
+                var thead = `<thead><tr><th style='text-align: center'>{0}</th>`.format(data.report1[1][0][0][0])+roots.join('')+`<th>Sparklines</th></tr></thead>`;
+                // console.log(`thead:`,thead);
+                var tbody = data.report1[1].slice(1).map(function(x){
+                    var td= x.slice(1, -1).map(function(x){
+                        return `<td><div style="background-image: linear-gradient( to right, {0} {1}%,  #FFF 0px);text-align: right;">{2}</div></td><td style="text-align: right;font-size: 12px;">{3}</td>`.format(x[2], x[1], x[0], x[3]);
+                    });
+                    return `<tr><td><div>{0}</div></td>`.format(x[0][0]) + td.join('') + `<td>{0}</td></tr>`.format(x.slice(-1)[0][0]); //slice return an array, not a constant
+                });
+                // console.log(`tbody[0]:`,tbody[0]);
+                var table = document.getElementById("bal");
+                // console.log(`#bal parent:`,$('#bal').parent().html());
+                // console.log(`table.innerHTML:`, `<table id="report3" class="display compact nowrap">`+thead + tbody.join('')+`</table>`);
+                table.innerHTML = `<table id="report3" class="table table-sm" data-toggle="table" data-fixed-columns="true" data-height='800'>`+thead +`<tbody>`+ tbody.join('')+`</tbody></table>`;
+                // console.log(`#bal:`, $('#bal').html());
+
+                $(function() {
+                    for (var i = 0; i < data.lspan.slice(1).length; i++) {
+                      console.log(`sparklineinc:`, i, data.lspan.slice(1)[i].slice(1, -1));
+                      $('.inc'+(i+1)).sparkline(data.lspan.slice(1)[i].slice(1, -1), {width:'100px',height:'25px',    spotColor: undefined,
+                      minSpotColor: '#00ff00',
+                      maxSpotColor: '#ff0000'});
+                    }
+                    for (var i = 0; i < data.lspan1.slice(1).length; i++) {
+                      console.log(`sparklinebal:`, i, data.lspan1.slice(1)[i].slice(1, -1));
+                      $('.bal'+(i+1)).sparkline(data.lspan1.slice(1)[i].slice(1, -1), {width:'100px',height:'25px',    spotColor: undefined,
+                      minSpotColor: '#00ff00',
+                      maxSpotColor: '#ff0000'});
+                    }
+                });
+
+            });
+        return false;
+        });
+    });
+    </script>

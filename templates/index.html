@@ -1,0 +1,96 @@
+<script>
+    function f1(){
+        $("#div2 ul").append("<li>"+$(this).parent().html()+"</li>");
+        var y= $(this).html().replace('%', "").replace('(', "").replace(')', "").replace(' ', "").replace('/', "").replace('+', "").replace('.', "");
+        var x=$('<input type=checkbox name=choice class='+y+' value='+$(this).html()+' checked = true style="display: none;">');
+        $("#div2").append(x);
+        $(this).parent().remove();
+    }
+    function f2(){
+        $("#div1 ul").append('<li>'+$(this).parent().html()+'</li>');
+        var y= $(this).html().replace('%', "").replace('(', "").replace(')', "").replace(' ', "").replace('/', "").replace('+', "").replace('.', "");
+        $("."+y+":lt(1)").remove();
+        $(this).parent().remove();
+    }
+    function f3(){
+        $("#div5 ul").append("<li>"+$(this).parent().html()+"</li>");
+        var y= $(this).html().replace('%', "").replace('(', "").replace(')', "").replace(' ', "").replace('/', "").replace('+', "").replace('.', "");
+        var x=$('<input type=checkbox name=cols class='+y+' value='+$(this).html()+' checked = true style="display: none;">');
+        $("#div5").append(x);
+        $(this).parent().remove();
+    }
+    function f4(){
+        $("#div4 ul").append('<li>'+$(this).parent().html()+'</li>');
+        var y= $(this).html().replace('%', "").replace('(', "").replace(')', "").replace(' ', "").replace('/', "").replace('+', "").replace('.', "");
+        $("."+y+":lt(1)").remove();
+        $(this).parent().remove();
+    }
+    function f5(){
+        $("#div12 ul").append("<li>"+$(this).parent().html()+"</li>");
+        var y= $(this).html().replace('%', "").replace('(', "").replace(')', "").replace(' ', "").replace('/', "").replace('+', "").replace('.', "");
+        var x=$('<input type=checkbox name=cols1 class='+y+' value='+$(this).html()+' checked = true style="display: none;">');
+        //var x=$('<input type=checkbox name=cols1 class='+$(this).html()+' value='+$(this).html()+' checked = true>');
+        $("#div12").append(x);
+        $(this).parent().remove();
+    }
+    function f6(){
+        $("#div11 ul").append('<li>'+$(this).parent().html()+'</li>');
+        var y= $(this).html().replace('%', "").replace('(', "").replace(')', "").replace(' ', "").replace('/', "").replace('+', "").replace('.', "");
+        $("."+y+":lt(1)").remove();
+        //$("."+$(this).html()+":lt(1)").remove();
+        $(this).parent().remove();
+    }
+    function f7(){
+        $("#div16 ul").append("<li>"+$(this).parent().html()+"</li>");
+        var y= $(this).html().replace('%', "").replace('(', "").replace(')', "").replace(' ', "").replace('/', "").replace('+', "").replace('.', "");
+        var x=$('<input type=checkbox name=cols2 class='+y+' value='+$(this).html()+' checked = true style="display: none;">');
+        //var x=$('<input type=checkbox name=cols1 class='+$(this).html()+' value='+$(this).html()+' checked = true>');
+        $("#div16").append(x);
+        $(this).parent().remove();
+    }
+    function f8(){
+        $("#div15 ul").append('<li>'+$(this).parent().html()+'</li>');
+        var y= $(this).html().replace('%', "").replace('(', "").replace(')', "").replace(' ', "").replace('/', "").replace('+', "").replace('.', "");
+        $("."+y+":lt(1)").remove();
+        //$("."+$(this).html()+":lt(1)").remove();
+        $(this).parent().remove();
+    }
+
+    $(document).ready(function(){
+        $("#div0 button:eq(0)").click(function(){
+            $("#div1 ul").children().remove();
+            $("#div1 ul")
+            .append("<li><button type='button' class='btn btn-default'>item1</button></li>")
+            .append("<li><button type='button' class='btn btn-primary'>item2</button></li>")
+            .append("<li><button type='button' class='btn btn-success'>item3</button></li>");
+
+        });
+
+        $("#div0 button:eq(1)").click(function(){
+            $("#div1 ul").children().remove();
+            $("#div1 ul")
+            .append("<li><button type='button' class='btn btn-info'>item4</button></li>")
+            .append("<li><button type='button' class='btn btn-warning'>item5</button></li>")
+            .append("<li><button type='button' class='btn btn-danger'>item6</button></li>")
+            .append("<li><button type='button' class='btn btn-link'>item7</button></li>");
+        });
+
+        $("#div1").on('click', 'button', f1);  //$("#div1 button").on('click', f1);  wrong
+        $("#div2").on('click', 'button', f2);  //$("#div2 button").on('click', f2);  wrong
+
+        $("#div4").on('click', 'button', f3);
+        $("#div5").on('click', 'button', f4);
+
+        $("#div11").on('click', 'button', f5);
+        $("#div12").on('click', 'button', f6);
+
+        $("#div15").on('click', 'button', f7);
+        $("#div16").on('click', 'button', f8);
+
+        $("ul").sortable({
+         cancel: ".fixed"
+        });
+
+    });
+
+</script>

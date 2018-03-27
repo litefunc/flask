@@ -1,0 +1,42 @@
+
+<script>
+$(function() {
+    var i =0;
+    $('#div7').on('click', 'button', function() {
+        $("#div9").append('<div id = graphdiv'+i+'></div>');
+        var id = 'graphdiv'+i;
+        console.log(id);
+        $.getJSON($SCRIPT_ROOT + '/plot1ajax/', {
+        data: $(this).attr('value')
+        }, function(data) {
+            new Dygraph(document.getElementById(id),
+            data.L[i][2],
+            {
+            labels: data.L[i][3],
+            title:data.L[i][6],
+            axes: {
+                x: {
+                    valueFormatter: Dygraph.dateString_,
+                    axisLabelFormatter: Dygraph.dateAxisFormatter,
+                    ticker: Dygraph.dateTicker
+                }
+            },
+            highlightSeriesOpts: {
+            strokeWidth: 1,
+            strokeBorderWidth: 1,
+            highlightCircleSize: 5
+            },
+            legend: 'follow',
+            labelsSeparateLines:true,
+            connectSeparatedPoints:true
+            });
+            i+=1;
+        });
+    //i+=1; should not put here beacuse it is executed before callback function(data){};
+    console.log(i);
+    $('#tabs a[href="#tabs-plot1Out"]').click(); //need this or the plot won't show
+    return false;
+    });
+});
+
+</script>

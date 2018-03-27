@@ -1,0 +1,36 @@
+<script>
+//$(document).ready(function(){
+  //var i = 1;
+  //$("#div7 input").click(function(){
+
+
+  {% for l in d.L1 %}
+    $("#div13").append('<div id = graphdiv'+{{l[0]|safe}}+' class=inline style="width:450px;"></div>');
+    //alert(i);
+    new Dygraph(document.getElementById("graphdiv"+{{l[0]|safe}}),
+              {{l[2]|safe}},
+              {
+                labels: {{l[3]|safe}},
+                title:'{{l[6]|safe}}',
+                axes: {
+                    x: {
+                        valueFormatter: Dygraph.dateString_,
+                        axisLabelFormatter: Dygraph.dateAxisFormatter,
+                        ticker: Dygraph.dateTicker
+                    }
+              },
+              //showRangeSelector: true,
+              legend: 'follow',
+              labelsSeparateLines:true,
+              connectSeparatedPoints:false
+              });
+
+
+      {% endfor %}
+      $( function(){
+        $('#tabs a[href="{{d.tab|safe}}"]').click();
+      });
+  //});
+//});
+
+</script>

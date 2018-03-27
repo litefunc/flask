@@ -1,0 +1,145 @@
+
+<input type="checkbox" id="chk-sync" onchange="update()"><label for="chk-sync">Sync</label>
+<script>
+var sync;
+var gs;
+
+window.update = function() {
+    var chk = document.getElementById('chk-sync').checked;
+
+    if(chk) {
+        sync = Dygraph.synchronize(gs,{range: false});
+    }
+    else {
+        sync.detach();
+	    for (i = 0; i < gs.length; ++i) {
+			gs[i].updateOptions({
+                dateWindow: null,
+			    valueRange: null
+		    });
+        }
+    }
+}
+</script>
+
+<script type=text/javascript>
+if (!String.prototype.format) {
+    String.prototype.format = function() {
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(match, number) {
+        return typeof args[number] != 'undefined'
+          ? args[number]
+          : match
+        ;
+        });
+    };
+}
+
+gs = [];
+$(function() {
+    $('#mline').on('click', function() {
+        // let width = $('#mlineform input[name="width"]').val()
+        // let height = $('#mlineform input[name="height"]').val()
+        // var d=`
+        // <div id = "dy${i}" className="few" style="width:${width}px;height:${height}px;"></div>
+        // <form id="dyform${i}">
+        //   <input type="button" name="dy${i}" value="raw"/>
+        //   <input type="button" name="dy${i}" value="normalize"/>
+        //   <input type="button" name="dy${i}" value="remove"/>
+        // </form>
+        // `     //use button instead of submit or the page will reload
+        // $('#tabs-mlineOut').append(d);
+        // // $("#tabs-mlineOut form").on('click', 'input', scaleajax);
+        // $(`#dyform${i}`).on('click', 'input', scaleajax);
+        // $('#tabs a[href="#tabs-mlineOut"]').click();
+        // var id = `dy${i}`;
+        $.getJSON($SCRIPT_ROOT + '/mlineajax/', {
+        data: $("#mlineform").serialize(),
+        }, function(data) {
+          let mlineIndex = data.mlineIndex
+          let divForm=`
+          <div id = "dy${mlineIndex}" className="few" style="width:${data.width}px;height:${data.height}px;"></div>
+          <form id="dyform${mlineIndex}">
+            <input type="button" name="dy${mlineIndex}" value="raw"/>
+            <input type="button" name="dy${mlineIndex}" value="normalize"/>
+            <input type="button" name="dy${mlineIndex}" value="remove"/>
+          </form>
+          `     //use button instead of submit or the page will reload
+          $('#tabs-mlineOut').append(divForm);
+          // $("#tabs-mlineOut form").on('click', 'input', scaleajax);
+          $(`#dyform${mlineIndex}`).on('click', 'input', scaleajax);
+          $('#tabs a[href="#tabs-mlineOut"]').click();
+          let id = `dy${mlineIndex}`;
+            gs.push(new Dygraph(document.getElementById(id),
+            data.data,
+            {
+            labels: data.labels,
+            title: data.title,
+            axes: {
+                x: {
+                    valueFormatter: Dygraph.dateString_,
+                    axisLabelFormatter: Dygraph.dateAxisFormatter,
+                    ticker: Dygraph.dateTicker
+                }
+            },
+            highlightSeriesOpts: {
+            strokeWidth: 1,
+            strokeBorderWidth: 1,
+            highlightCircleSize: 5
+            },
+            showRangeSelector: data.rangeselector,
+            interactionModel: Dygraph.defaultInteractionModel,
+            legend: 'follow',
+            labelsSeparateLines:true,
+            connectSeparatedPoints:true
+            }));
+        });
+    return false;
+    });
+});
+</script>
+<script>
+
+function scaleajax(){
+    if ($(this).attr('value')=="remove"){
+        $(this).parent().remove();
+        $('#'+$(this).attr('name')).remove();
+        $.getJSON($SCRIPT_ROOT + '/scaleajax/', {
+        name: $(this).attr('name'),
+        value: $(this).attr('value')
+        }, function(data) {
+            console.log(data.id)
+        });
+    }else{
+        $.getJSON($SCRIPT_ROOT + '/scaleajax/', {
+        name: $(this).attr('name'),
+        value: $(this).attr('value')
+        }, function(data) {
+            gs[data.mlineIndex]=new Dygraph(document.getElementById(data.id),
+            data.data,
+            {
+            labels: data.labels,
+            title: data.title,
+            axes: {
+                x: {
+                    valueFormatter: Dygraph.dateString_,
+                    axisLabelFormatter: Dygraph.dateAxisFormatter,
+                    ticker: Dygraph.dateTicker
+                }
+            },
+            highlightSeriesOpts: {
+            strokeWidth: 1,
+            strokeBorderWidth: 1,
+            highlightCircleSize: 5
+            },
+            showRangeSelector: data.rangeselector,
+            interactionModel: Dygraph.defaultInteractionModel,
+            legend: 'follow',
+            labelsSeparateLines:true,
+            connectSeparatedPoints:true
+            });
+        });
+    }
+}
+
+</script>

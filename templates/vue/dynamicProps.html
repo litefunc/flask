@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script type="text/javascript" src="C:/Users/ak66h_000/node_modules/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+  <div id="ex1">
+    <input v-model="parentMsg"><br>
+    <child :message="parentMsg"></child>
+  </div>
+  <div id="ex2">
+    <child1 :mops="parentmops" :mysum="parentmysum" :summary="parentsummary" :tse="parenttse"></child1>
+  </div>
+</body>
+<script>
+Vue.component('child', {
+  // declare the props
+  props: ['message'],
+  delimiters: ['{', '}'],
+  // just like data, the prop can be used inside templates
+  // and is also made available in the vm as this.message
+  template: `<span>{ message }</span>`
+})
+new Vue({
+  el: '#ex1',
+  data:{
+    parentMsg:'aasd'
+  }
+})
+Vue.component('child1', {
+  // declare the props
+  props: ['mops', 'mysum', 'summary', 'tse'],
+  delimiters: ['{', '}'],
+  // just like data, the prop can be used inside templates
+  // and is also made available in the vm as this.message
+  template: `
+  <h4>mops</h4>
+  <div v-for="item in { mops }">
+      <input type="radio" name="dbtable1" v-bind:value="item">{ item }
+  </div>
+  <h4>mysum</h4>
+  <div v-for="item in { mysum }">
+      <input type="radio" name="dbtable1" v-bind:value="item">{ item }
+  </div>
+  <h4>summary</h4>
+  <div v-for="item in { summary }">
+      <input type="radio" name="dbtable1" v-bind:value="item">{ item }
+  </div>
+  <h4>tse</h4>
+  <div v-for="item in { tse }">
+      <input type="radio" name="dbtable1" v-bind:value="item">{ item }
+  </div>
+  <input type="submit" value="Show fields" class='btn btn-default'>
+  `
+})
+const a = [];
+a.push('Hello'); // 可执行
+a.length = 0;    // 可执行
+console.log(a[0]);
+// alert(a);
+
+new Vue({
+  el: '#ex2',
+  delimiters: ['{', '}'],
+  data:{
+    parentmops:['Foo1', 'Bar2' , 'Foo3', 'Bar4' ],
+    parentmysum:['Foo1', 'Bar2' , 'Foo3', 'Bar4' ],
+    parentsummary:['Foo1', 'Bar2' , 'Foo3', 'Bar4' ],
+    parenttse:['Foo1', 'Bar2' , 'Foo3', 'Bar4' ],
+  }
+})
+</script>
+</html>

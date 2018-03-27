@@ -1,0 +1,199 @@
+    <div id="tabs-9" class="tab-pane">
+
+        <form action = "/rep1/" method = "POST">
+            公司代號:<input type="text" name=compid_report1 value=5522>
+            <input type="submit" value="query" id=sel>
+            {% if d.report1 is defined %}
+            <span id=income1>{{d.tb1[0]}}>>>{{d.compid_report1}}{{d.compname1}}</span>
+
+            <span><a href=#balence1>To balence sheet</a></span>
+            {% endif %}
+        </form>
+        <span><button id=enable>fix column</button></span>
+            {% if d.report1 is defined %}
+
+        <div class="row" id=inc>
+            <table id="report2" class="display compact nowrap">
+                <thead>
+                    <tr>
+                        <th style="text-align: center">{{d.report1[0][0][0][0]|safe}}</th>
+                        {% for i in d.report1[0][0][1:-1] %}
+                        <th style="text-align: right;width: 100%;">{{i[0]|safe}}</th><th style="text-align: right;font-size: 14px;">%</th>
+                        {% endfor %}
+                        <th>Sparklines</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in d.report1[0][1:] %}
+                    <tr>
+                        <td><div>{{item[0][0]|safe}}</div></td>
+                        {% for i in item[1:-1] %}
+                        <td><div style="background-image: linear-gradient( to right, {{i[2]|safe}} {{i[1]|safe}}%,  #FFF 0px);text-align: right;">{{i[0]|safe}}</div></td><td style="text-align: right;font-size: 12px;">{{i[3]|safe}}</td>
+                        {% endfor %}
+                        <td>{{item[-1][0]|safe}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!--<span id=balence1>{{d.tb1[1]}}>>>{{d.compid_report1}}{{d.compname1}}</span>-->
+        <!--<span><a href=#income1>To income statement</a></span>-->
+        <!--<div>-->
+
+        <!--</div>-->
+    {% endif %}
+
+    {% if d.lspan is defined %}
+    {% for item in d.lspan[1:] %}
+    <script type="text/javascript">
+    $(function() {
+
+        /* Sparklines can also take their values from the first argument
+        passed to the sparkline() function */
+        // var myvalues = [10,8,5,null,4,4,1];
+        $('.inc{{loop.index}}').sparkline({{item[1:-1]|safe}}, {width:'100px',height:'25px',    spotColor: undefined,
+    minSpotColor: '#00ff00',
+    maxSpotColor: '#ff0000'});
+
+    });
+    </script>
+    {% endfor %}
+
+    {% endif %}
+
+    </div>
+
+    <div id="tabs-10" class="tab-pane">
+        <form action = "/rep1/" method = "POST">
+            公司代號:<input type="text" name=compid_report1 value=5522>
+            <input type="submit" value="query">
+            {% if d.report1 is defined %}
+            <span id=balence1>{{d.tb1[1]}}>>>{{d.compid_report1}}{{d.compname1}}</span>
+
+            <span><a href=#income1>To income statement</a></span>
+            {% endif %}
+        </form>
+
+        <span><button id=enable1>fix column</button></span>
+      {% if d.report1 is defined %}
+        <div class="row" id=bal>
+            <table id="report3" class="display compact nowrap">
+
+                <thead>
+                    <tr>
+                        <th style="text-align: center">{{d.report1[1][0][0][0]|safe}}</th>
+                        {% for i in d.report1[1][0][1:-1] %}
+                        <th style="text-align: right;width: 100%;">{{i[0]|safe}}</th><th style="text-align: right;font-size: 14px;">%</th>
+                        {% endfor %}
+                        <th>Sparklines</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in d.report1[1][1:] %}
+                    <tr>
+                        <td><div>{{item[0][0]|safe}}</div></td>
+                        {% for i in item[1:-1] %}
+                        <td><div style="background-image: linear-gradient( to right, {{i[2]|safe}} {{i[1]|safe}}%,  #FFF 0px);text-align: right;">{{i[0]|safe}}</div></td><td style="text-align: right;font-size: 12px;">{{i[3]|safe}}</td>
+                        {% endfor %}
+                        <td>{{item[-1][0]|safe}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+      {% endif %}
+
+      {% if d.lspan1 is defined %}
+      {% for item in d.lspan1[1:] %}
+      <script type="text/javascript">
+      $(function() {
+
+          /* Sparklines can also take their values from the first argument
+          passed to the sparkline() function */
+          // var myvalues = [10,8,5,null,4,4,1];
+          $('.bal{{loop.index}}').sparkline({{item[1:-1]|safe}}, {width:'100px',height:'25px',    spotColor: undefined,
+    minSpotColor: '#00ff00',
+    maxSpotColor: '#ff0000'});
+
+      });
+      </script>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    <link rel="stylesheet" type="text/css" href="../static/bower_components/datatables/media/css/dataTables.jqueryui.min.css">
+    <script type="text/javascript" src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="../static/bower_components/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
+    {% if d.report1 is defined %}
+
+      <!-- <link rel="stylesheet" type="text/css" href="../static/datatables.min.css">
+      <script type="text/javascript" src="../static/datatables.min.js"></script> -->
+
+            <script>
+            $(document).ready(function() {
+                var table =$('#report2').DataTable( {
+                    colReorder: true,
+                    scrollY:        820,
+                    scrollX:        true,
+                    scrollCollapse: true,
+                    paging:         false,
+                    searching: false,
+                    info:     false,
+                    ordering: false,
+                    //fixedColumns:   true,
+                    // fixedHeader: true,
+                    //aaSorting : []
+                    //"columnDefs": [
+                    //  { "orderable": false, "targets": 0 }
+                    //],
+                    //bSort : false
+                } );
+
+                var table1 =$('#report3').DataTable( {
+                    colReorder: true,
+                    scrollY:        820,
+                    scrollX:        true,
+                    scrollCollapse: true,
+                    paging:         false,
+                    searching: false,
+                    info:     false,
+                    ordering: false,
+                    // fixedColumns:   true,
+                    //fixedHeader: true,
+                    //aaSorting : []
+                    //"columnDefs": [
+                    //  { "orderable": false, "targets": 0 }
+                    //],
+                    //bSort : false
+                } );
+
+                 $('#enable').click( function (e) {
+
+                 alert(1);
+                //table.colReorder.reset();
+                    new $.fn.dataTable.FixedColumns( table, {
+        //fixedColumns: false
+        //fixedColumns: true
+                });
+            } );
+
+                   $('#enable1').click( function (e) {
+
+                 alert(1);
+                //table.colReorder.reset();
+                    new $.fn.dataTable.FixedColumns( table1, {
+        //fixedColumns: false
+        //fixedColumns: true
+                });
+            } );
+
+
+            } );
+
+            </script>
+
+
+
+    {% endif %}

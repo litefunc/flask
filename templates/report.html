@@ -1,0 +1,52 @@
+        <form action = "/rep/" method = "POST">
+            公司代號:<input type="text" name=compid_report value="5522"/>
+            <input type="submit" value="query"/>
+        </form>
+
+        {% if d.report is defined %}
+        <h3 id=income>{{d.tb[0]}}>>>{{d.compid_report}}{{d.compname}}</h3>
+        <a href=#balence style="display: inline;float: right;color:blue;position:fixed;">To balence sheet</a>
+        <table id="report" class="table table-striped table-condensed table-sm table-hover display">
+            <thead >
+                <tr>
+                    {% for i, j, k in d.report[0][0] %}
+                    <th>{{i}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in d.report[0][1:] %}
+                <tr>
+                    {% for i, j, k in item %}
+                    <!--<td><div style="width:20px;background-color:blue;"><div style="width:{{j}}%;background-color:red;">{{i}}</div></div></td>-->
+                    <td nowrap><div style="width:{{j}}%;background-color:{{k}};">{{i}}</div></td>
+                    <!--<td><div>{{i}}</div></td>-->
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <h3 id=balence>{{d.tb[1]}}>>>{{d.compid_report}}{{d.compname}}</h3>
+        <a href=#income style="display: inline;float: right;color:blue;">To income statement</a>
+        <table id="report1" class="table table-striped table-condensed table-sm table-hover display">
+            <thead>
+                <tr>
+                    {% for i, j, k in d.report[1][0] %}
+                    <th>{{i}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in d.report[1][1:] %}
+                <tr>
+                    {% for i, j, k in item %}
+                    <!--<td><div style="width:20px;background-color:blue;"><div style="width:{{j}}%;background-color:red;">{{i}}</div></div></td>-->
+                    <td nowrap><div style="width:{{j}}%;background-color:{{k}};">{{i}}</div></td>
+                    <!--<td><div>{{i}}</div></td>-->
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+       {% endif %}

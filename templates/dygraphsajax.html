@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <script type="text/javascript" src="../static/bower_components/jquery/dist/jquery.min.js"></script>
+<!--dygraphs-->
+<script type="text/javascript" src="../static/bower_components/dygraphs/dygraph-combined-dev.js"></script>
+<!--dygraphs synchronizer--><!--cannot put before dygraph-combined-dev.js-->
+<!--copy latest version from github-->
+<script type="text/javascript" src="../static/extras/synchronizer.js"></script>
+
+  <style>
+  #resizable { width: 150px; height: 150px; padding: 0.5em; }
+  #resizable h3 { text-align: center; margin: 0; }
+  </style>
+
+</head>
+
+<body>
+
+<div id="graphdiv" style="width:500px; height:400px;"></div>
+
+<script>
+
+  var g=new Dygraph(document.getElementById("graphdiv"),
+                [
+                  [1,10,100,100],
+                  [2,20,'NaN',30],
+                  [3,'NaN',60,40],
+                  [4,70,80,20]
+                ],
+                {
+                  labels: [ "x", "A", "B", "C" ]
+                });
+
+</script>
+
+
+</body>
+
+</html>

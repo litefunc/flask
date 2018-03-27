@@ -1,0 +1,134 @@
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<script type="text/javascript" src="C:/Users/ak66h_000/node_modules/jquery/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="C:/Users/ak66h_000/node_modules/bootstrap/dist/css/bootstrap.min.css">
+<script type="text/javascript" src="C:/Users/ak66h_000/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <button type="button" class="btn btn-default">Default</button>
+  <button type="button" class="btn btn-primary">Primary</button>
+  <button type="button" class="btn btn-success">Success</button>
+  <button type="button" class="btn btn-info">Info</button>
+  <button type="button" class="btn btn-warning">Warning</button>
+  <button type="button" class="btn btn-danger" value="1">Danger</button>
+  <button type="button" class="btn btn-link" value="${ message }">Link</button>
+  <div id="app1">
+  ${ message }
+  </div>
+
+<ul id="example-1">
+  <li v-for="item in items">
+    ${ item }
+  </li>
+
+<div id=example-2>
+<div  v-for="item in items">
+  <div  v-for="i in item">
+  ${ i.slice(0,1) }
+  </div>
+</div>
+${ summary }
+</div>
+
+</ul>
+<div id="example-3">
+<child message="hello!"></child>
+</div>
+<script>
+var name = "Bob", time = "today";
+
+$(document).ready(function(){
+  $("button").click(function(){
+    alert(`Hello ${name}, how are you ${time}?`);
+    alert($(this).html());
+    var jsonString = JSON.stringify([['Foo1', 'Bar1' ], ['Foo1', 'Bar1' ]]);
+    a.map(x=>alert(x.value))
+  });
+});
+
+var app = new Vue({
+  el: '#app1',
+  delimiters: ['${', '}'],
+  data: {
+    message: 'abc'
+  }
+})
+let items1=[['Foo1', 'Bar1' ], ['Foo1', 'Bar1' ]]
+let items2=[['Foo2', 'Bar2' ], ['Foo2', 'Bar2' ]]
+let items3=['Foo1', 'Bar2' , 'Foo3', 'Bar4' ]
+let a=[]
+items3.map(x => a.push({value:x}))
+
+var example2 = new Vue({
+  el: '#example-2',
+  delimiters: ['${', '}'],
+  data: {
+    // parentMessage: {{d.testl|safe}},
+    // summary: {{d.summary|safe}},
+    items: items1
+  }
+})
+
+var example1 = new Vue({
+  el: '#example-1',
+  delimiters: ['${', '}'],
+  data: {
+    items: [
+      ['Foo', 'Bar' ], ['Foo', 'Bar' ]
+    ]
+  }
+})
+
+
+var roots = items1.map(x =>`<li><button class='btn btn-default'>${x}</button></li>`)
+let y = document.getElementById("example-3");
+y.innerHTML = `<ul>${roots.join('')}</ul>`;
+
+Vue.component('child', {
+  // declare the props
+  props: ['message'],
+  // just like data, the prop can be used inside templates
+  // and is also made available in the vm as this.message
+  template: '<span>{{ message }}</span>'
+})
+new Vue({
+  el: '#example-3',
+  // delimiters: ['${', '}'],
+
+})
+</script>
+
+<!-- <div style="background-color:blue;color:yellow" class="col-md-2">
+    <form id = "lf">
+        <h4>mops</h4>
+        <div v-for="item in mops">
+        <input type="radio" name="dbtable" v-bind:value="item">${ item }
+        </div>
+        <h4>mysum</h4>
+        <div v-for="item in mysum">
+        <input type="radio" name="dbtable" v-bind:value="item">${ item }
+        </div>
+        <h4>summary</h4>
+        <div v-for="item in summary">
+        <input type="radio" name="dbtable" v-bind:value="item">${ item }
+        </div>
+        <h4>tse</h4>
+        <div v-for="item in tse">
+        <input type="radio" name="dbtable" v-bind:value="item">${ item }
+        </div>
+        <input type="submit" value="Show fields" class='btn btn-default'>
+    </form>
+</div> -->
+
+  <!-- <script>
+  var vue = new Vue({
+    el: '#lf',
+    delimiters: ['${', '}'],
+    data: {
+      mops:{{d.mops|safe}},
+      mysum:{{d.mysum|safe}},
+      summary:{{d.summary|safe}},
+      tse:{{d.tse|safe}},
+    }
+  })
+  </script> -->

@@ -1,0 +1,150 @@
+<link rel="stylesheet" type="text/css" href="../static/bower_components/datatables/media/css/dataTables.jqueryui.min.css">
+<script type="text/javascript" src="../static/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../static/bower_components/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min.js"></script>
+
+<div id="tabs-report1" class="tab-pane">
+
+  <form id="rep1incform">
+      公司代號:<input type="text" name=compid_report1 value=5522>
+      <input type="submit" value="query" id=sel>
+      <span id=income1></span>
+      <span><a href=#balance1>To balance sheet</a></span>
+  </form>
+  <span><button id=enable>fix column</button></span>
+  <form id="rep1balform">
+      公司代號:<input type="text" name=compid_report1 value=5522>
+      <input type="submit" value="query">
+      <span id=balance1></span>
+      <span><a href=#income1>To income statement</a></span>
+  </form>
+  <span><button id=enable1>fix column</button></span>
+
+</div>
+
+<div id="tabs-income" class="tab-pane">
+    <div class="row" id="inc">
+    </div>
+</div>
+<div id="tabs-balance" class="tab-pane">
+    <div class="row" id=bal>
+    </div>
+</div>
+
+<script>
+  function incStatement(data){
+    var span = document.getElementById("income1");
+    span.innerHTML=`${data.tb1[0]}>>>${data.compid_report1}${data.compname1}`;
+    var roots = data.report1[0][0].slice(1,-1).map(x =>`<th style='text-align: right;width: 100%;'>${x[0]}</th><th style='text-align: right;font-size: 14px;'>%</th>`);
+    var thead = `<thead><tr><th style='text-align: center'>${data.report1[0][0][0][0]}</th>${roots.join('')}<th>Sparklines</th></tr></thead>`;
+    var tbody = data.report1[0].slice(1).map(function(x){
+        var td= x.slice(1, -1).map(x =>`
+          <td><div style="background-image: linear-gradient( to right, ${x[2]} ${x[1]}%,  #FFF 0px);text-align: right;">${x[0]}</div></td>
+          <td style="text-align: right;font-size: 12px;">${x[3]}</td>
+          `);
+        return `<tr><td><div>${x[0][0]}</div></td>${td.join('')}<td>${x.slice(-1)[0][0]}</td></tr>`; //slice return an array, not a constant
+    });
+    var table = document.getElementById("inc");
+    table.innerHTML = `<table id="report2" class="display compact nowrap">${thead}<tbody>${tbody.join('')}</tbody></table>`;
+    $(function() {
+        for (var i = 0; i < data.lspan.slice(1).length; i++) {
+          console.log(`sparklineinc:`, i, data.lspan.slice(1)[i].slice(1, -1));
+          $('.inc'+(i+1)).sparkline(data.lspan.slice(1)[i].slice(1, -1), {width:'100px',height:'25px', spotColor: undefined,
+          minSpotColor: '#00ff00',
+          maxSpotColor: '#ff0000'});
+        }
+    });
+
+      var table2 =$('#report2').DataTable({
+        colReorder: true,
+        scrollY:        820,
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         false,
+        searching: false,
+        info:     false,
+        ordering: false,
+        fixedColumns:   true,
+        fixedHeader: true
+      });
+  }
+  function balSheet(data){
+    var span = document.getElementById("balance1");
+    span.innerHTML=`${data.tb1[1]}>>>${data.compid_report1}${data.compname1}`;
+    var roots = data.report1[1][0].slice(1,-1).map(x =>`
+      <th style='text-align: right;width: 100%;'>${x[0]}</th><th style='text-align: right;font-size: 14px;'>%</th>
+      `);
+    var thead = `<thead><tr><th style='text-align: center'>${data.report1[1][0][0][0]}</th>${roots.join('')}<th>Sparklines</th></tr></thead>`;
+    var tbody = data.report1[1].slice(1).map(function(x){
+        var td= x.slice(1, -1).map(x =>`
+          <td><div style="background-image: linear-gradient( to right, ${x[2]} ${x[1]}%, #FFF 0px);text-align: right;">${x[0]}</div></td>
+          <td style="text-align: right;font-size: 12px;">${x[3]}</td>
+          `);
+        return `<tr><td><div>${x[0][0]}</div></td>${td.join('')}<td>${x.slice(-1)[0][0]}</td></tr>`; //slice return an array, not a constant
+    });
+    var table = document.getElementById("bal");
+    table.innerHTML = `<table id="report3" class="display compact nowrap">${thead}<tbody>${tbody.join('')}</tbody></table>`;
+
+    $(function() {
+        for (var i = 0; i < data.lspan1.slice(1).length; i++) {
+          console.log(`sparklinebal:`, i, data.lspan1.slice(1)[i].slice(1, -1));
+          $('.bal'+(i+1)).sparkline(data.lspan1.slice(1)[i].slice(1, -1), {width:'100px',height:'25px', spotColor: undefined,
+          minSpotColor: '#00ff00',
+          maxSpotColor: '#ff0000'});
+        }
+    });
+
+      var table3 =$('#report3').DataTable({
+          colReorder: true,
+          scrollY:        820,
+          scrollX:        true,
+          // scrollCollapse: true,
+          paging:         false,
+          searching: false,
+          info:     false,
+          ordering: false,
+          fixedColumns:   true,
+          fixedHeader: true
+      });
+  }
+</script>
+
+<script>
+$(function() {
+    $('#rep1incform input[type="submit"]').on('click', function() {
+        $('#tabs a[href="#tabs-balance"]').click();
+        console.log(0);
+        $.getJSON($SCRIPT_ROOT + '/rep1ajax/', {
+        data: $(this).parent().serialize()
+        }, function(data) {
+            console.log(1);
+            //bal
+            balSheet(data)
+
+            $('#tabs a[href="#tabs-income"]').click();
+            // inc
+            incStatement(data)
+        });
+    return false;
+    });
+});
+</script>
+<script>
+$(function() {
+    $('#rep1balform input[type="submit"]').on('click', function() {
+        console.log(0);
+        $('#tabs a[href="#tabs-income"]').click(); //need click before table draw so that fixedColumns can work
+        $.getJSON($SCRIPT_ROOT + '/rep1ajax/', {
+        data: $(this).parent().serialize()
+        }, function(data) {
+            console.log(1);
+            // inc
+            incStatement(data)
+
+            $('#tabs a[href="#tabs-balance"]').click();
+            //bal
+            balSheet(data)
+        });
+    return false;
+    });
+});
+</script>

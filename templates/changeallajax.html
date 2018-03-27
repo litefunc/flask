@@ -1,0 +1,93 @@
+<script>
+$(function() {
+    $('#changeallform input[type="submit"]').on('click', function() {
+        $.getJSON($SCRIPT_ROOT + '/changeallajax/', {
+        data: $("#changeallform").serialize(),
+        }, function(data) {
+            var roots = data.mllys.map(function(l){
+                return `<div id = c3{0} class=inline></div>
+                          <form>
+                              <input type='button' name=c3{0} value='X' class='remove inline'>
+                          </form>`.format(l[0]);
+            });
+            var y = document.getElementById("div17");
+            y.innerHTML = roots.join('');
+            $("#div17 form").on('click', 'input', removeajax);
+            data.mllys.map(function(l){
+              var chart = c3.generate({
+                  bindto: '#c3{0}'.format(l[0]),
+                  data: {
+                      x: '年月日',
+                      rows:
+                          l[1]
+                  },
+                  subchart: {
+                      show: false
+                  },
+                  size: {
+                      width:750,
+                      height: 300
+                  },
+                  point: {
+                      show: false
+                  },
+                  title: {
+                      text: l[2]
+                  },
+                  axis: {
+                      x: {
+                          type: 'timeseries',
+                          tick: {
+                              format: '%Y-%m'
+                          }
+                      }
+                  }
+              });
+
+            });
+
+
+        });
+    $('#tabs a[href="#tabs-ysOut"]').click();
+    return false;
+    });
+});
+</script>
+
+
+<!-- {% for l in d.mllys %}
+    <script>
+
+    var chart = c3.generate({
+        bindto: '#chart{{l[0]|safe}}',
+        data: {
+            x: '年月日',
+            rows:
+                {{l[1]|safe}}
+        },
+        subchart: {
+            show: false
+        },
+        size: {
+            width:750,
+            height: 300
+        },
+        point: {
+            show: false
+        },
+        title: {
+            text: {{l[2]|safe}}
+        },
+        axis: {
+            x: {
+                type: 'timeseries',
+                tick: {
+                    format: '%Y-%m'
+                }
+            }
+        }
+    });
+
+
+    </script>
+{% endfor %} -->

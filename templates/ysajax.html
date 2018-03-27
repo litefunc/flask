@@ -1,0 +1,101 @@
+
+<!-- Load c3.css -->
+<link rel="stylesheet" type="text/css" href="../static/c3/c3-0.4.11/c3.css">
+<!-- <script type="text/javascript" src="../static/bower_components/c3/c3.min.css"></script> -->
+
+<!-- Load d3.js and c3.js -->
+<!-- need d3.v3 -->
+<!-- <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> -->
+<script type="text/javascript" src="../static/d3.v3/d3.v3.min.js"></script>
+<!-- <script type="text/javascript" src="../static/bower_components/d3/d3.min.js"></script> -->
+<!-- <script src="{{url_for('static', filename='c3/c3-0.4.11/c3.min.js')}}"></script> -->
+<script type="text/javascript" src="../static/bower_components/c3/c3.min.js"></script>
+<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+
+<!-- {% for l in d.mllys %}
+<div id = chart{{l[0]|safe}} class=inline></div>
+    <form action = "/remove/" method = "POST">
+        <input type="submit" name=c3{{l[0]|safe}} value="X" class='remove inline'>
+    </form>
+{% endfor %} -->
+
+<script>
+$(function() {
+    $('#ysform input[type="submit"]').on('click', function() {
+        $.getJSON($SCRIPT_ROOT + '/ysajax/', {
+        data: $("#ysform").serialize(),
+        }, function(data) {
+            var roots = data.mllys.map(function(l){
+                return `<div id = c3{0} class=inline></div>
+                          <form>
+                              <input type='button' name=c3{0} value='X' class='remove inline'>
+                          </form>`.format(l[0]);
+            });
+            var y = document.getElementById("div17");
+            y.innerHTML = roots.join('');
+            $("#div17 form").on('click', 'input', removeajax);
+            data.mllys.map(function(l){
+              var chart = c3.generate({
+                  bindto: '#c3{0}'.format(l[0]),
+                  data: {
+                      x: '年月日',
+                      rows:
+                          l[1]
+                  },
+                  subchart: {
+                      show: false
+                  },
+                  size: {
+                      width:750,
+                      height: 300
+                  },
+                  point: {
+                      show: false
+                  },
+                  title: {
+                      text: l[2]
+                  },
+                  axis: {
+                      x: {
+                          type: 'timeseries',
+                          tick: {
+                              format: '%Y-%m'
+                          }
+                      }
+                  }
+              });
+
+            });
+
+
+        });
+    $('#tabs a[href="#tabs-ysOut"]').click();
+    return false;
+    });
+});
+</script>
+
+
+<script>
+
+function removeajax(){
+    if ($(this).attr('value')=="X"){
+        console.log('name0:', $(this).attr('name'));
+        $(this).parent().remove();
+        $('#'+$(this).attr('name')).remove();
+        $.getJSON($SCRIPT_ROOT + '/removeajax/', {
+
+        data: $(this).attr('name')
+        }, function(data) {
+          console.log('name1:', $(this).attr('name'));
+          console.log(data.s);
+        });
+    }else{
+      console.log('WTF!');
+    }
+}
+
+</script>
